@@ -99,7 +99,7 @@ class PdfCreator:
 
     def __get_html(self) -> str:
         """
-        Returns: full HTML string (document) for converting to pdf
+        Returns: full HTML string (document) with styles for converting to pdf
         """
         styles = """
         @page {
@@ -115,13 +115,6 @@ class PdfCreator:
             padding: 0;
             background: #fff;
         }
-        .page {
-            width: 210mm;
-            min-height: 297mm;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
         .image-box {
             width: 315px;
             height: 315px;
@@ -131,17 +124,6 @@ class PdfCreator:
             width: 100%;
             height: 100%;
             object-fit: cover;
-        }
-        h1 {
-            margin: 0 0 10px 0;
-            font-size: 33px;
-            color: #332E28;
-        }
-        .info-wrapper {
-            display: grid;
-            grid-template-columns: 325px 325px;
-            margin: 50px;
-            gap: 9mm 10mm;
         }
         .info {
             font-size: 16px;
@@ -169,15 +151,6 @@ class PdfCreator:
             overflow-wrap: break-word;
             color: #332E28;
         }
-        .footer {
-            font-size: 11px;
-            line-height: 1.6;
-            color: #332E28;
-            border-top: 1px solid #C05B28;
-            background-color: #FBFAF9;
-            padding-top: 5mm;
-            padding: 14px 40.5px;
-        }
         a {
             color: #C05B28;
             line-height: 1.5;
@@ -187,11 +160,67 @@ class PdfCreator:
         if self.image_url:
             image = self.__get_html_image()
             name = ""
-            styles += ""
+            styles += """
+            .page {
+                width: 210mm;
+                min-height: 297mm;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+            }
+            h1 {
+                margin: 0 0 10px 0;
+                font-size: 33px;
+                color: #332E28;
+            }
+            .footer {
+                font-size: 11px;
+                line-height: 1.6;
+                color: #332E28;
+                border-top: 1px solid #C05B28;
+                background-color: #FBFAF9;
+                padding-top: 5mm;
+                padding: 14px 40.5px;
+            }
+            .info-wrapper {
+                display: grid;
+                grid-template-columns: 325px 325px;
+                margin: 50px;
+                gap: 9mm 10mm;
+            }
+            """
         else:
             image = ""
             name = f"<h1>{list(self.attribute_blocks[0].values())[0]}</h1>"
-            styles += ""
+            styles += """
+            .page {
+                width: 210mm;
+                min-height: 297mm;
+                display: flex;
+                flex-direction: column;
+            }
+            h1 {
+                margin: 0 0 10px 50px;
+                font-size: 33px;
+                color: #332E28;
+            }
+            .footer {
+                font-size: 11px;
+                line-height: 1.6;
+                color: #332E28;
+                border-top: 1px solid #C05B28;
+                background-color: #FBFAF9;
+                padding-top: 5mm;
+                padding: 14px 40.5px;
+                margin-top: auto;
+            }
+            .info-wrapper {
+                display: grid;
+                grid-template-columns: 325px 325px;
+                margin: 0px 50px;
+                gap: 9mm 10mm;
+            }
+            """
 
         attribute_blocks = self.__get_html_attribute_blocks()
         footer = self.__get_html_footer()
@@ -262,20 +291,11 @@ class PdfCreator:
 if __name__ == "__main__":
 
     attribute_blocks = [
-        # Name (title) block must always be first.
+        # Name (title) block must always be first
         {
-            None: "Some Name"
+            None: "Product Name"
         },
-        # first attributes block
-        {
-            "Manufacturer": "Tilebar",
-            "Collection": "BG992-223.6",
-            "Color": "Blue",
-            "Size": "15 x 15",
-            "Edge": "Some Edge",
-            "Material": "Ceramic",
-        },
-        # second attributes block
+        # next attributes block
         {
             "Manufacturer": "Tilebar",
             "Collection": "BG992-223.6",
@@ -284,7 +304,16 @@ if __name__ == "__main__":
             "Edge": "Some Edge",
             "Material": "Ceramic",
         },
-        # third attributes block
+        # next attributes block
+        {
+            "Manufacturer": "Tilebar",
+            "Collection": "BG992-223.6",
+            "Color": "Blue",
+            "Size": "15 x 15",
+            "Edge": "Some Edge",
+            "Material": "Ceramic",
+        },
+        # next attributes block
         {
             "Manufacturer": "Tilebar",
             "Collection": "BG992-223.6",
@@ -296,8 +325,9 @@ if __name__ == "__main__":
     ]
 
     url = "https://image_url_example.jpg"
+    file_path = "created_pdf.pdf"
 
     pdf_creator = PdfCreator(attribute_blocks=attribute_blocks, image_url=url)
     pdf = pdf_creator.get_pdf()
-    with open("created_pdf.pdf", "wb") as f:
+    with open(file_path, "wb") as f:
         f.write(base64.b64decode(pdf['data']))
