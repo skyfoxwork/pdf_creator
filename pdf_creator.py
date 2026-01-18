@@ -66,7 +66,12 @@ class PdfCreator:
 
             rows = ""
             for attribute, value in attribute_block.items():
-                rows += f'<div class="row"><span class="label">{attribute}:</span><span class="value">{value}</span></div>'
+                rows += f'''
+                <div class="row">
+                    <div class="label">{attribute}:</div> 
+                    <div class="value">{value}</div>
+                </div>
+                '''
 
             attributes_block = f"""
             <div class="info">
@@ -103,7 +108,7 @@ class PdfCreator:
         """
         styles = """
         @page {
-            size: A4;
+            size: Letter;
             margin: 0px;
         }
         * {
@@ -116,8 +121,8 @@ class PdfCreator:
             background: #fff;
         }
         .image-box {
-            width: 315px;
-            height: 315px;
+            width: 92mm;
+            height: 92mm;
             border: 1px solid #ddd;
         }
         .image-box img {
@@ -129,11 +134,10 @@ class PdfCreator:
             font-size: 16px;
         }
         .row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 7px;
+            align-items: center;
         }
         .label {
+            flex: 0 0 auto;
             color: #666;
             word-break: break-word;
             word-wrap: break-word;
@@ -141,19 +145,35 @@ class PdfCreator:
             width: 55%;
             color: #504840;
             font-weight: 400;
-            /* width: 2000px; */
+            font-size: 14px
         }
         .value {
-            font-weight: 600;
-            width: 42%;
-            word-break: break-word;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-            color: #332E28;
+            flex: 1 1 auto;
+            white-space: nowrap;
+            line-height: 1.2;
+            font-size: 16px
         }
         a {
             color: #C05B28;
             line-height: 1.5;
+        }
+        .main-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4.5mm;
+        }
+        .page {
+            width: 8.5in;
+            min-height: 11in;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .info-wrapper {
+            display: grid;
+            grid-template-columns: 92mm 84mm;
+            margin: 53px;
+            gap: 16mm 10mm;
         }
         """
 
@@ -161,13 +181,6 @@ class PdfCreator:
             image = self.__get_html_image()
             name = ""
             styles += """
-            .page {
-                width: 210mm;
-                min-height: 297mm;
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-            }
             h1 {
                 margin: 0 0 10px 0;
                 font-size: 33px;
@@ -182,25 +195,13 @@ class PdfCreator:
                 padding-top: 5mm;
                 padding: 14px 40.5px;
             }
-            .info-wrapper {
-                display: grid;
-                grid-template-columns: 325px 325px;
-                margin: 50px;
-                gap: 9mm 10mm;
-            }
             """
         else:
             image = ""
             name = f"<h1>{list(self.attribute_blocks[0].values())[0]}</h1>"
             styles += """
-            .page {
-                width: 210mm;
-                min-height: 297mm;
-                display: flex;
-                flex-direction: column;
-            }
             h1 {
-                margin: 0 0 10px 50px;
+                margin: 40px 0px -40px 50px;
                 font-size: 33px;
                 color: #332E28;
             }
@@ -213,12 +214,6 @@ class PdfCreator:
                 padding-top: 5mm;
                 padding: 14px 40.5px;
                 margin-top: auto;
-            }
-            .info-wrapper {
-                display: grid;
-                grid-template-columns: 325px 325px;
-                margin: 0px 50px;
-                gap: 9mm 10mm;
             }
             """
 
@@ -276,9 +271,7 @@ class PdfCreator:
                 'landscape': False,
                 'displayHeaderFooter': False,
                 'printBackground': True,
-                'preferCSSPageSize': True,  # if True, will use @page css stile for page size
-                'paperWidth': 8.27,  # A4 format, used if 'preferCSSPageSize': False
-                'paperHeight': 11.69  # A4 format, used if 'preferCSSPageSize': False
+                'preferCSSPageSize': True,
             }
 
             pdf = driver.execute_cdp_cmd("Page.printToPDF", print_options)
@@ -327,7 +320,7 @@ if __name__ == "__main__":
     url = "https://image_url_example.jpg"
     file_path = "created_pdf.pdf"
 
-    pdf_creator = PdfCreator(attribute_blocks=attribute_blocks, image_url=url)
+    pdf_creator = PdfCreator(attribute_blocks=attribute_blocks, image_url=None)
     pdf = pdf_creator.get_pdf()
     with open(file_path, "wb") as f:
         f.write(base64.b64decode(pdf['data']))
