@@ -290,7 +290,7 @@ if __name__ == "__main__":
         },
         # next attributes block
         {
-            "Manufacturer": "Tilebar",
+            "Manufacturer": "Tilebar3333333333333333",
             "Collection": "BG992-223.6",
             "Color": "Blue",
             "Size": "15 x 15",
@@ -299,7 +299,7 @@ if __name__ == "__main__":
         },
         # next attributes block
         {
-            "Manufacturer": "Tilebar",
+            "Manufacturer": "Tilebar333333333333333",
             "Collection": "BG992-223.6",
             "Color": "Blue",
             "Size": "15 x 15",
@@ -308,7 +308,7 @@ if __name__ == "__main__":
         },
         # next attributes block
         {
-            "Manufacturer": "Tilebar",
+            "Manufacturer": "Tilebar333333333333333",
             "Collection": "BG992-223.6",
             "Color": "Blue",
             "Size": "15 x 15",
@@ -317,10 +317,10 @@ if __name__ == "__main__":
         },
     ]
 
-    url = "https://image_url_example.jpg"
+    url = "https://cdn.27.ua/sc--media--prod/default/2f/7e/b9/2f7eb9c8-90cb-4a07-82dd-a5121a75c55b.jpg"
     file_path = "created_pdf.pdf"
 
-    pdf_creator = PdfCreator(attribute_blocks=attribute_blocks, image_url=None)
+    pdf_creator = PdfCreator(attribute_blocks=attribute_blocks, image_url=url)
     pdf = pdf_creator.get_pdf()
     with open(file_path, "wb") as f:
         f.write(base64.b64decode(pdf['data']))
