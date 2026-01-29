@@ -149,9 +149,9 @@ class PdfCreator:
         }
         .value {
             flex: 1 1 auto;
-            white-space: nowrap;
             line-height: 1.2;
-            font-size: 16px
+            font-size: 16px;
+            word-break: break-word;
         }
         a {
             color: #C05B28;
@@ -303,7 +303,7 @@ if __name__ == "__main__":
             "Collection": "BG992-223.6",
             "Color": "Blue",
             "Size": "15 x 15",
-            "Edge": "Some Edge",
+            "Edge": "Some Edge, Some Edge, Some Edge, Some Edge, Some Edge, Some Edge, Some Edge, Some Edge, Some Edge, Some Edge, Some Edge, Some Edge",
             "Material": "Ceramic",
         },
         # next attributes block
