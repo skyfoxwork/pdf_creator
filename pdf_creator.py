@@ -31,6 +31,7 @@ class PdfCreator:
         options.add_argument('--disable-gpu')
         options.add_argument('--no-sandbox')
         options.add_argument('--kiosk-printing')
+        options.add_argument("--disable-dev-shm-usage")
 
         # Enable CDP (Chrome DevTools Protocol) support
         return webdriver.Chrome(options=options)
