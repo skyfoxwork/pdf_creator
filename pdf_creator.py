@@ -16,13 +16,14 @@ class PdfCreator:
     def __init__(
             self,
             attribute_blocks: list[dict] = None,
-            image_url: str | None = None
+            image_url: str | None = None,
+            headers: dict = None
     ) -> None:
         self.attribute_blocks = attribute_blocks
         self.image_url = image_url
+        self.headers = headers
 
-    @staticmethod
-    def _get_driver() -> WebDriver:
+    def _get_driver(self) -> WebDriver:
         """
         Returns: WebDriver with Enable CDP (Chrome DevTools Protocol) support
         """
@@ -33,8 +34,17 @@ class PdfCreator:
         options.add_argument('--kiosk-printing')
         options.add_argument("--disable-dev-shm-usage")
 
+        driver = webdriver.Chrome(options=options)
+
+        if self.headers:
+            driver.execute_cdp_cmd("Network.enable",{})
+            driver.execute_cdp_cmd(
+                "Network.setExtraHTTPHeaders",
+                {"headers": self.headers}
+            )
+
         # Enable CDP (Chrome DevTools Protocol) support
-        return webdriver.Chrome(options=options)
+        return driver
 
     def __get_html_image(self) -> str:
         """
